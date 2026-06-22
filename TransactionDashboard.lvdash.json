@@ -1,0 +1,340 @@
+{
+  "datasets": [
+    {
+      "name": "4191739b",
+      "displayName": "sales_transactions",
+      "config": {
+        "version": "1.1",
+        "source": "samples.bakehouse.sales_transactions",
+        "dimensions": [
+          {
+            "name": "transactionID",
+            "expr": "source.transactionID",
+            "displayName": "Transaction ID"
+          },
+          {
+            "name": "customerID",
+            "expr": "source.customerID",
+            "displayName": "Customer ID"
+          },
+          {
+            "name": "franchiseID",
+            "expr": "source.franchiseID",
+            "displayName": "Franchise ID"
+          },
+          {
+            "name": "dateTime",
+            "expr": "source.dateTime",
+            "displayName": "Date Time"
+          },
+          {
+            "name": "product",
+            "expr": "source.product",
+            "displayName": "Product"
+          },
+          {
+            "name": "quantity",
+            "expr": "source.quantity",
+            "displayName": "Quantity"
+          },
+          {
+            "name": "unitPrice",
+            "expr": "source.unitPrice",
+            "displayName": "Unit Price"
+          },
+          {
+            "name": "totalPrice",
+            "expr": "source.totalPrice",
+            "displayName": "Total Price"
+          },
+          {
+            "name": "paymentMethod",
+            "expr": "source.paymentMethod",
+            "displayName": "Payment Method"
+          },
+          {
+            "name": "cardNumber",
+            "expr": "source.cardNumber",
+            "displayName": "Card Number"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "fd153536",
+      "displayName": "From Notebook",
+      "queryLines": [
+        "USE CATALOG `workspace`;\n",
+        "USE SCHEMA `default`;\n",
+        "\n",
+        "SELECT * FROM samples.bakehouse.sales_transactions"
+      ]
+    },
+    {
+      "name": "a702a149",
+      "displayName": "Product_Sales_Desc",
+      "queryLines": [
+        "SELECT product, sum(totalprice) FROM samples.bakehouse.sales_transactions\r\n",
+        "GROUP BY product\r\n",
+        "ORDER BY sum(totalprice) DESC"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "0b75dc3a",
+      "displayName": "Dashboard",
+      "layout": [
+        {
+          "widget": {
+            "name": "total-price-by-product",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "a702a149",
+                  "fields": [
+                    {
+                      "name": "sum(sum(totalprice))",
+                      "expression": "SUM(`sum(totalprice)`)"
+                    },
+                    {
+                      "name": "product",
+                      "expression": "`product`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Total Price by Product\n",
+                "showDescription": true,
+                "description": "Golden Gate Ginger is our highest selling product.\n"
+              },
+              "mark": {
+                "colors": [
+                  "#C8C5E7",
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(sum(totalprice))",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "product",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "x-reversed"
+                    }
+                  }
+                },
+                "color": {
+                  "fieldName": "sum(sum(totalprice))",
+                  "scale": {
+                    "type": "quantitative",
+                    "colorRamp": {
+                      "mode": "scheme",
+                      "scheme": "orangered"
+                    }
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 12,
+            "height": 9
+          }
+        },
+        {
+          "widget": {
+            "name": "a7ff8470",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "4191739b",
+                  "fields": [
+                    {
+                      "name": "count(paymentMethod)",
+                      "expression": "COUNT(`paymentMethod`)"
+                    },
+                    {
+                      "name": "paymentMethod",
+                      "expression": "`paymentMethod`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": false
+              },
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "count(paymentMethod)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Payment Method Breakdown"
+                },
+                "color": {
+                  "fieldName": "paymentMethod",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 11,
+            "width": 6,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "quantity-of-sales-over-time",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "4191739b",
+                  "fields": [
+                    {
+                      "name": "daily(dateTime)",
+                      "expression": "DATE_TRUNC(\"DAY\", `dateTime`)"
+                    },
+                    {
+                      "name": "sum(quantity)",
+                      "expression": "SUM(`quantity`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Quantity of Sales over time\n"
+              },
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "daily(dateTime)",
+                  "displayName": "Date",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(quantity)",
+                  "displayName": "Quantity",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 11,
+            "width": 6,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "9827ff07",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"text-align:center;display:block\"><span style=\"font-size: 60px;line-height: 1.5;\">**Sales Dashboard**</span></span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
